@@ -27,8 +27,23 @@ relu:
     blt a1, t0, error     
     li t1, 0             
 
+    mv t3, a0
 loop_start:
-    # TODO: Add your own implementation
+    beq t1, a1, end
+    lw t4, 0(t3)            # Load array[t1] into t4
+    bltz t4, zero_value
+    j loop_next
+
+zero_value:
+    sw zero, 0(t3)          # Set array[t1] to 0
+
+loop_next:
+    addi t3, t3, 4
+    addi t1, t1, 1
+    j loop_start
+
+end:
+    ret
 
 error:
     li a0, 36          

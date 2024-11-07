@@ -115,7 +115,25 @@ inner_loop_start:
     j inner_loop_start
     
 inner_loop_end:
-    # TODO: Add your own implementation
+    addi s0, s0, 1
+    li t0, 0
+    
+mul_start:
+    addi s3, s3, 4 # incrementing the row on Matrix A
+    addi t0, t0, 1
+    blt t0, a2, mul_start
+    j outer_loop_start
+
+outer_loop_end:
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    lw s1, 8(sp)
+    lw s2, 12(sp)
+    lw s3, 16(sp)
+    lw s4, 20(sp)
+    lw s5, 24(sp)
+    addi sp, sp, 28
+    ret
 
 error:
     li a0, 38

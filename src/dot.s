@@ -36,7 +36,35 @@ dot:
 
 loop_start:
     bge t1, a2, loop_end
-    # TODO: Add your own implementation
+    lw t2, 0(a0)
+    lw t3, 0(a1)
+
+mul:
+    li t4, 0
+    beq t2, zero, mul_end
+
+mul_loop:
+    beq t3, zero, mul_end
+    add t4, t4, t2
+    addi t3, t3, -1
+    j mul_loop
+
+mul_end:
+    add t0, t0, t4
+    addi t1, t1, 1
+    mv t5, zero
+    
+a0_stride:
+    addi a0, a0, 4
+    addi t5, t5, 1
+    blt t5, a3, a0_stride
+    mv t5, zero
+
+a1_stride:
+    addi a1, a1, 4
+    addi t5, t5, 1
+    blt t5, a4, a1_stride
+    j loop_start
 
 loop_end:
     mv a0, t0

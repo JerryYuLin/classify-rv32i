@@ -28,9 +28,26 @@ argmax:
     lw t0, 0(a0)
 
     li t1, 0
-    li t2, 1
+    li t2, 1            # Current index
 loop_start:
-    # TODO: Add your own implementation
+    beq t2, a1, end
+    addi a0, a0, 4
+    lw t3, 0(a0)
+    bge t3, t0, set_max_num
+    addi t2, t2, 1
+    j loop_start
+
+set_max_num:
+    addi t2, t2, 1
+    beq t3, t0, loop_start
+    mv t1, t2
+    addi t1, t1, -1
+    mv t0, t3
+    j loop_start
+
+end:
+    mv a0, t1
+    ret
 
 handle_error:
     li a0, 36
