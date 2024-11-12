@@ -41,13 +41,22 @@ loop_start:
 
 mul:
     li t4, 0
-    beq t2, zero, mul_end
+    bge t2, zero, mul_loop_t2
+    bge t3, zero, mul_loop_t3
+    neg t2, t2
+    neg t3, t3 
 
-mul_loop:
+mul_loop_t2:
+    beq t2, zero, mul_end
+    add t4, t4, t3
+    addi t2, t2, -1
+    j mul_loop_t2
+
+mul_loop_t3:
     beq t3, zero, mul_end
     add t4, t4, t2
     addi t3, t3, -1
-    j mul_loop
+    j mul_loop_t3
 
 mul_end:
     add t0, t0, t4

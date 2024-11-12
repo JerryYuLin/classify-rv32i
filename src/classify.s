@@ -166,7 +166,21 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+
+    addi sp, sp, -16
+    sw ra, 0(sp)
+    sw t0, 4(sp)
+    sw t1, 8(sp)
+    sw t2, 12(sp)
+
+    jal mul
+    
+    lw ra, 0(sp)
+    lw t0, 4(sp)
+    lw t1, 8(sp)
+    lw t2, 12(sp)
+    addi sp, sp, 16
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -203,8 +217,23 @@ classify:
     mv a0, s9 # move h to the first argument
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a1, t0, t1 # length of h array and set it as second argument
-    # FIXME: Replace 'mul' with your own implementation
+    
+    addi sp, sp, -20
+    sw ra, 0(sp)
+    sw t0, 4(sp)
+    sw t1, 8(sp)
+    sw t2, 12(sp)
+    sw a0, 16(sp)
+
+    jal mul
+    mv a1, a0
+    
+    lw ra, 0(sp)
+    lw t0, 4(sp)
+    lw t1, 8(sp)
+    lw t2, 12(sp)
+    lw a0, 16(sp)
+    addi sp, sp, 20
     
     jal relu
     
@@ -226,7 +255,21 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s6)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    
+    addi sp, sp, -16
+    sw ra, 0(sp)
+    sw t0, 4(sp)
+    sw t1, 8(sp)
+    sw t2, 12(sp)
+
+    jal mul
+    
+    lw ra, 0(sp)
+    lw t0, 4(sp)
+    lw t1, 8(sp)
+    lw t2, 12(sp)
+    addi sp, sp, 16
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -286,8 +329,23 @@ classify:
     mv a0, s10 # load o array into first arg
     lw t0, 0(s3)
     lw t1, 0(s6)
-    mul a1, t0, t1 # load length of array into second arg
-    # FIXME: Replace 'mul' with your own implementation
+
+    addi sp, sp, -20
+    sw ra, 0(sp)
+    sw t0, 4(sp)
+    sw t1, 8(sp)
+    sw t2, 12(sp)
+    sw a0, 16(sp)
+
+    jal mul
+    mv a1, a0
+    
+    lw ra, 0(sp)
+    lw t0, 4(sp)
+    lw t1, 8(sp)
+    lw t2, 12(sp)
+    lw a0, 16(sp)
+    addi sp, sp, 20
     
     jal argmax
     
@@ -384,3 +442,27 @@ error_args:
 error_malloc:
     li a0, 26
     j exit
+
+
+mul:
+    li t2, 0
+    bge t0, zero, mul_loop_t0
+    bge t1, zero, mul_loop_t1
+    neg t0, t0
+    neg t1, t1 
+
+mul_loop_t0:
+    beq t0, zero, mul_end
+    add t2, t2, t1
+    addi t0, t0, -1
+    j mul_loop_t0
+
+mul_loop_t1:
+    beq t1, zero, mul_end
+    add t2, t2, t0
+    addi t1, t1, -1
+    j mul_loop_t1
+
+mul_end:
+    mv a0, t2
+    jr ra

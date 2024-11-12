@@ -20,7 +20,7 @@ abs:
     # Load number from memory
     lw t0, 0(a0)
     bge t0, zero, done
-    sub t0, zero, t0
+    neg t0, t0
     sw t0, 0(a0)
 
 done:
