@@ -30,12 +30,12 @@ relu:
     mv t3, a0
 loop_start:
     beq t1, a1, end
-    lw t4, 0(t3)            # Load array[t1] into t4
+    lw t4, 0(t3)
     bltz t4, zero_value
     j loop_next
 
 zero_value:
-    sw zero, 0(t3)          # Set array[t1] to 0
+    sw zero, 0(t3)
 
 loop_next:
     addi t3, t3, 4
